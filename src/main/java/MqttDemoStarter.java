@@ -27,11 +27,11 @@ public class MqttDemoStarter {
         String token = "";
         // 取token
         try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            final HttpPost httpPost = new HttpPost("http://a1-hsb.easemob.com/easemob-demo/chatdemoui/token");
+            final HttpPost httpPost = new HttpPost("http://a1.easemob.com/easemob-demo/chat1554973508/token");
             Map<String, String> params = new HashMap<>();
             params.put("grant_type", "password");
-            params.put("username", "test");
-            params.put("password", "test123");
+            params.put("username", "test5");
+            params.put("password", "123456");
             //设置请求体参数
             StringEntity entity = new StringEntity(JSONObject.toJSONString(params), Charset.forName("utf-8"));
             entity.setContentEncoding("utf-8");
@@ -59,12 +59,13 @@ public class MqttDemoStarter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        token = "YWMt8rm1zrMGEeuLmsODo6ULnEBOcD2CSkq9gSI5Fn8cXZa1lyfQswYR67kXlQ8tApHuAwMAAAF5X_ibdABPGgDQhH7fsQ8_s6Rb8z1CfcM-lUcAIgwODsZlg_3TorRtYw";
         String deviceId = "f41b85f4-3651-42e2-ab5a-fb4029ddcec4";
-        String appId = "1wyp94";
+        String appId = "ay1sc0";
         /**
          * 设置接入点，进入console管理平台获取
          */
-        String endpoint = "1wyp94.sandbox.mqtt.chat";
+        String endpoint = "ay1sc0.cn1.mqtt.chat";
 
         /**
          * MQTT客户端ID，由业务系统分配，需要保证每个TCP连接都不一样，保证全局唯一，如果不同的客户端对象（TCP连接）使用了相同的clientId会导致连接异常断开。
@@ -152,7 +153,7 @@ public class MqttDemoStarter {
         /**
          * 用户名，在console中注册
          */
-        mqttConnectOptions.setUserName("test");
+        mqttConnectOptions.setUserName("test5");
         /**
          * 用户密码为第一步中申请的token
          */
@@ -172,6 +173,7 @@ public class MqttDemoStarter {
              */
             mqttClient.publish(myTopic, message);
         }
+        mqttClient.unsubscribe(new String[]{myTopic});
         Thread.sleep(Long.MAX_VALUE);
     }
 }
