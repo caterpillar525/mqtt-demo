@@ -156,7 +156,7 @@ public class MqttDemoStarter {
         /**
          * 用户密码为第一步中申请的token
          */
-        mqttConnectOptions.setPassword(("$t$" + token).toCharArray());
+        mqttConnectOptions.setPassword(token.toCharArray());
         mqttConnectOptions.setCleanSession(true);
         mqttConnectOptions.setKeepAliveInterval(90);
         mqttConnectOptions.setAutomaticReconnect(true);
