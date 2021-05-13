@@ -27,7 +27,7 @@ public class MqttDemoStarter {
         String token = "";
         // 取token
         try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            final HttpPost httpPost = new HttpPost("http://a1.easemob.com/{org_name}/{app_name}/token");
+            final HttpPost httpPost = new HttpPost("http://{token域名}/{org_name}/{app_name}/token");
             Map<String, String> params = new HashMap<>();
             params.put("grant_type", "password");
             params.put("username", "test");
