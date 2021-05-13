@@ -27,11 +27,11 @@ public class MqttDemoStarter {
         String token = "";
         // 取token
         try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            final HttpPost httpPost = new HttpPost("http://a1.easemob.com/easemob-demo/chat1554973508/token");
+            final HttpPost httpPost = new HttpPost("http://a1.easemob.com/{org_name}/{app_name}/token");
             Map<String, String> params = new HashMap<>();
             params.put("grant_type", "password");
-            params.put("username", "test5");
-            params.put("password", "123456");
+            params.put("username", "test");
+            params.put("password", "test123");
             //设置请求体参数
             StringEntity entity = new StringEntity(JSONObject.toJSONString(params), Charset.forName("utf-8"));
             entity.setContentEncoding("utf-8");
@@ -59,7 +59,6 @@ public class MqttDemoStarter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        token = "YWMt8rm1zrMGEeuLmsODo6ULnEBOcD2CSkq9gSI5Fn8cXZa1lyfQswYR67kXlQ8tApHuAwMAAAF5X_ibdABPGgDQhH7fsQ8_s6Rb8z1CfcM-lUcAIgwODsZlg_3TorRtYw";
         String deviceId = "f41b85f4-3651-42e2-ab5a-fb4029ddcec4";
         String appId = "ay1sc0";
         /**
@@ -153,7 +152,7 @@ public class MqttDemoStarter {
         /**
          * 用户名，在console中注册
          */
-        mqttConnectOptions.setUserName("test5");
+        mqttConnectOptions.setUserName("test");
         /**
          * 用户密码为第一步中申请的token
          */
