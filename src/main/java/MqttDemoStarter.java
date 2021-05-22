@@ -130,7 +130,7 @@ public class MqttDemoStarter {
             }
 
             /**
-             * 接受消息回调方法
+             * 接收消息回调方法
              * @param s
              * @param mqttMessage
              */
