@@ -164,6 +164,8 @@ public class MqttDemoStarter {
         mqttConnectOptions.setConnectionTimeout(5000);
 
         mqttClient.connect(mqttConnectOptions);
+        //暂停1秒钟，等待连接订阅完成
+        Thread.sleep(1000);
         for (int i = 0; i < 10; i++) {
             MqttMessage message = new MqttMessage("hello world pub sub msg".getBytes());
             message.setQos(qosLevel);
