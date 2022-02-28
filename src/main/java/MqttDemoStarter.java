@@ -27,11 +27,10 @@ public class MqttDemoStarter {
         String token = "";
         // 取token
         try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            final HttpPost httpPost = new HttpPost("http://{token域名}/{org_name}/{app_name}/token");
+            final HttpPost httpPost = new HttpPost("https://{restapi域名}/openapi/rm/user/token");
             Map<String, String> params = new HashMap<>();
-            params.put("grant_type", "password");
             params.put("username", "test");
-            params.put("password", "test123");
+            params.put("cid", "f41b85f4-3651-42e2-ab5a-fb4029ddcec4@vle7j0");
             //设置请求体参数
             StringEntity entity = new StringEntity(JSONObject.toJSONString(params), Charset.forName("utf-8"));
             entity.setContentEncoding("utf-8");
@@ -49,7 +48,7 @@ public class MqttDemoStarter {
                     //从响应体中解析出token
                     String responseBody = EntityUtils.toString(entity2, "utf-8");
                     JSONObject jsonObject = JSONObject.parseObject(responseBody);
-                    token = jsonObject.getString("access_token");
+                    token = jsonObject.getJSONObject("body").getString("access_token");
                 } else {
                     //请求失败
                     throw new ClientProtocolException("请求失败，响应码为：" + statusCode);
@@ -60,11 +59,11 @@ public class MqttDemoStarter {
             e.printStackTrace();
         }
         String deviceId = "f41b85f4-3651-42e2-ab5a-fb4029ddcec4";
-        String appId = "ay1sc0";
+        String appId = "vle7j0";
         /**
          * 设置接入点，进入console管理平台获取
          */
-        String endpoint = "ay1sc0.cn1.mqtt.chat";
+        String endpoint = "vle7j0.sandbox.mqtt.chat";
 
         /**
          * MQTT客户端ID，由业务系统分配，需要保证每个TCP连接都不一样，保证全局唯一，如果不同的客户端对象（TCP连接）使用了相同的clientId会导致连接异常断开。
@@ -174,6 +173,7 @@ public class MqttDemoStarter {
              */
             mqttClient.publish(myTopic, message);
         }
+        Thread.sleep(1000);
         mqttClient.unsubscribe(new String[]{myTopic});
         Thread.sleep(Long.MAX_VALUE);
     }
