@@ -63,7 +63,7 @@ public class MqttDemoStarter {
         /**
          * 设置接入点，进入console管理平台获取
          */
-        String endpoint = "vle7j0.sandbox.mqtt.chat";
+        String endpoint = "vle7j0.cn1.mqtt.chat";
 
         /**
          * MQTT客户端ID，由业务系统分配，需要保证每个TCP连接都不一样，保证全局唯一，如果不同的客户端对象（TCP连接）使用了相同的clientId会导致连接异常断开。
