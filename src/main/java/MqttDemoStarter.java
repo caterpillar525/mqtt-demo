@@ -201,7 +201,7 @@ public class MqttDemoStarter {
          */
         mqttConnectOptions.setPassword(mqtt_token.toCharArray());
         mqttConnectOptions.setCleanSession(true);
-        mqttConnectOptions.setKeepAliveInterval(90);
+        mqttConnectOptions.setKeepAliveInterval(45);
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setMqttVersion(MQTT_VERSION_3_1_1);
         mqttConnectOptions.setConnectionTimeout(5000);
