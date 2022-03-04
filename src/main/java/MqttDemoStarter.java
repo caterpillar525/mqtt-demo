@@ -24,20 +24,42 @@ import static org.eclipse.paho.client.mqttv3.MqttConnectOptions.MQTT_VERSION_3_1
 
 public class MqttDemoStarter {
     public static void main(String[] args) throws MqttException, InterruptedException {
+        
+        String deviceId = "f41b85f4-3651-42e2-ab5a-fb4029ddcec4";
+        String appId = "vle7j0";
+        /**
+         * 设置接入点，进入console管理平台获取
+         */
+        String endpoint = "vle7j0.cn1.mqtt.chat";
+
+        /**
+         * MQTT客户端ID，由业务系统分配，需要保证每个TCP连接都不一样，保证全局唯一，如果不同的客户端对象（TCP连接）使用了相同的clientId会导致连接异常断开。
+         * clientId由两部分组成，格式为DeviceID@appId，其中DeviceID由业务方自己设置，appId在控console控制台创建，，clientId总长度不得超过64个字符。
+         */
+        String clientId = deviceId + "@" + appId;
+        
+        String username = "test";
+        
+        String appClientId = "YXA67-uKaalmThCOut6Q8uPLSg";
+        String appClientSecret = "YXA63CFpMQFai4MdTDdGN92BBoG6_6g";
+        
+        // 获取token的URL
+        //https://{restapi}/openapi/rm/app/token
+        // 获取token
         String token = "";
         // 取token
         try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            final HttpPost httpPost = new HttpPost("https://{restapi域名}/openapi/rm/user/token");
+            final HttpPost httpPost = new HttpPost("https://{restapi}/openapi/rm/app/token");
             Map<String, String> params = new HashMap<>();
-            params.put("username", "test");
-            params.put("cid", "f41b85f4-3651-42e2-ab5a-fb4029ddcec4@vle7j0");
+            params.put("appClientId", appClientId);
+            params.put("appClientSecret", appClientSecret);
             //设置请求体参数
             StringEntity entity = new StringEntity(JSONObject.toJSONString(params), Charset.forName("utf-8"));
             entity.setContentEncoding("utf-8");
             httpPost.setEntity(entity);
             //设置请求头部
             httpPost.setHeader("Content-Type", "application/json");
-            //请求响应
+            //执行请求，返回请求响应
             try (final CloseableHttpResponse response = httpClient.execute(httpPost)) {
                 //请求返回状态码
                 int statusCode = response.getStatusLine().getStatusCode();
@@ -54,22 +76,44 @@ public class MqttDemoStarter {
                     throw new ClientProtocolException("请求失败，响应码为：" + statusCode);
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String mqtt_token = "";
+        // 取token
+        try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            final HttpPost httpPost = new HttpPost("https://{restapi}/openapi/rm/user/token");
+            Map<String, String> params = new HashMap<>();
+            params.put("username", "demo");
+            params.put("cid", clientId);
+            //设置请求体参数
+            StringEntity entity = new StringEntity(JSONObject.toJSONString(params), Charset.forName("utf-8"));
+            entity.setContentEncoding("utf-8");
+            httpPost.setEntity(entity);
+            //设置请求头部
+            httpPost.setHeader("Content-Type", "application/json");
+            httpPost.setHeader("Authorization", token);
+            //请求响应
+            try (final CloseableHttpResponse response = httpClient.execute(httpPost)) {
+                //请求返回状态码
+                int statusCode = response.getStatusLine().getStatusCode();
+                //请求成功
+                if (statusCode == HttpStatus.SC_OK && statusCode <= HttpStatus.SC_TEMPORARY_REDIRECT) {
+                    //取出响应体
+                    final HttpEntity entity2 = response.getEntity();
+                    //从响应体中解析出token
+                    String responseBody = EntityUtils.toString(entity2, "utf-8");
+                    JSONObject jsonObject = JSONObject.parseObject(responseBody);
+                    mqtt_token = jsonObject.getJSONObject("body").getString("access_token");
+                } else {
+                    //请求失败
+                    throw new ClientProtocolException("请求失败，响应码为：" + statusCode);
+                }
+            }
             //执行请求，返回请求响应
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String deviceId = "f41b85f4-3651-42e2-ab5a-fb4029ddcec4";
-        String appId = "vle7j0";
-        /**
-         * 设置接入点，进入console管理平台获取
-         */
-        String endpoint = "vle7j0.cn1.mqtt.chat";
-
-        /**
-         * MQTT客户端ID，由业务系统分配，需要保证每个TCP连接都不一样，保证全局唯一，如果不同的客户端对象（TCP连接）使用了相同的clientId会导致连接异常断开。
-         * clientId由两部分组成，格式为DeviceID@appId，其中DeviceID由业务方自己设置，appId在控console控制台创建，，clientId总长度不得超过64个字符。
-         */
-        String clientId = deviceId + "@" + appId;
 
         /**
          * 需要订阅或发送消息的topic名称
@@ -151,11 +195,11 @@ public class MqttDemoStarter {
         /**
          * 用户名，在console中注册
          */
-        mqttConnectOptions.setUserName("test");
+        mqttConnectOptions.setUserName(username);
         /**
          * 用户密码为第一步中申请的token
          */
-        mqttConnectOptions.setPassword(token.toCharArray());
+        mqttConnectOptions.setPassword(mqtt_token.toCharArray());
         mqttConnectOptions.setCleanSession(true);
         mqttConnectOptions.setKeepAliveInterval(90);
         mqttConnectOptions.setAutomaticReconnect(true);
