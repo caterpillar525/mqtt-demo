@@ -84,7 +84,7 @@ public class MqttDemoStarter {
         try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
             final HttpPost httpPost = new HttpPost("https://{restapi}/openapi/rm/user/token");
             Map<String, String> params = new HashMap<>();
-            params.put("username", "demo");
+            params.put("username", username);
             params.put("cid", clientId);
             //设置请求体参数
             StringEntity entity = new StringEntity(JSONObject.toJSONString(params), Charset.forName("utf-8"));
