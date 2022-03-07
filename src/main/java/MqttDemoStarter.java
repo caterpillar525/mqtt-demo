@@ -43,13 +43,15 @@ public class MqttDemoStarter {
         String appClientId = "YXA67-uKaalmThCOut6Q8uPLSg";
         String appClientSecret = "YXA63CFpMQFai4MdTDdGN92BBoG6_6g";
         
+        String restapi = "https://api.cn1.mqtt.chat/app/vle7j0";
+        
         // 获取token的URL
         //https://{restapi}/openapi/rm/app/token
         // 获取token
         String token = "";
         // 取token
         try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            final HttpPost httpPost = new HttpPost("https://{restapi}/openapi/rm/app/token");
+            final HttpPost httpPost = new HttpPost(restapi + "/openapi/rm/app/token");
             Map<String, String> params = new HashMap<>();
             params.put("appClientId", appClientId);
             params.put("appClientSecret", appClientSecret);
@@ -82,7 +84,7 @@ public class MqttDemoStarter {
         String mqtt_token = "";
         // 取token
         try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            final HttpPost httpPost = new HttpPost("https://{restapi}/openapi/rm/user/token");
+            final HttpPost httpPost = new HttpPost(restapi + "/openapi/rm/user/token");
             Map<String, String> params = new HashMap<>();
             params.put("username", username);
             params.put("cid", clientId);
